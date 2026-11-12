@@ -15,72 +15,11 @@ import sys
 A = 0x00000001
 B = 0x80000000
 
-MASK32 = 0xFFFFFFFF
 SEP = "=" * 60
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-
-class InvalidControlSignals(Exception):
-    """SLL8 e SRA1 ativos ao mesmo tempo (proibido pelo PDF)."""
-
-
-def ula_8bit_shifter(a_val: int, b_val: int, ir_str: str):
-    """
-    ULA de 8 bits com Deslocador e Flags N/Z.
-    IR (8 bits): [SLL8, SRA1, F0, F1, ENA, ENB, INVA, INC]
-
-    Retorna (a_prime, s, s_d, co, n, z), onde s é a saída da ULA antes do
-    deslocador e s_d é a saída deslocada.
-    """
-    sll8 = int(ir_str[0])
-    sra1 = int(ir_str[1])
-    f0   = int(ir_str[2])
-    f1   = int(ir_str[3])
-    ena  = int(ir_str[4])
-    enb  = int(ir_str[5])
-    inva = int(ir_str[6])
-    inc  = int(ir_str[7])
-
-    if sll8 and sra1:
-        raise InvalidControlSignals()
-
-    # 1. Habilitação das entradas
-    a_prime = (a_val & MASK32) if ena == 1 else 0
-    b_prime = (b_val & MASK32) if enb == 1 else 0
-
-    # 2. Inversão de A
-    a_op = (~a_prime & MASK32) if inva == 1 else a_prime
-
-    # 3. Operação Principal da ULA
-    op = (f0 << 1) | f1
-    co = 0
-
-    if op == 0:      # 00: AND
-        s = a_op & b_prime
-    elif op == 1:    # 01: OR
-        s = a_op | b_prime
-    elif op == 2:    # 10: NOT B
-        s = (~b_prime) & MASK32
-    else:            # 11: Addition
-        res = a_op + b_prime + inc
-        s = res & MASK32
-        co = 1 if res > MASK32 else 0
-
-    # 4. Deslocador (Shifter) - atua depois da ULA
-    if sll8 == 1:
-        s_d = (s << 8) & MASK32
-    elif sra1 == 1:
-        # Deslocamento aritmético à direita (preserva o bit de sinal de 32 bits)
-        s_signed = s if s < 0x80000000 else s - 0x100000000
-        s_d = (s_signed >> 1) & MASK32
-    else:
-        s_d = s
-
-    # 5. Flags N e Z (calculadas sobre a saída deslocada Sd)
-    z = 1 if s_d == 0 else 0
-    n = 1 if (s_d & 0x80000000) != 0 else 0
-
-    return a_prime, s, s_d, co, n, z
+# A ULA fica no módulo compartilhado (também usado pela Tarefa 2 e Etapa 3)
+from datapath import InvalidControlSignals, ula_8bit_shifter  # noqa: E402
 
 
 def executar_tarefa1(input_file=None, log_file=None, a_fixed=A, b_fixed=B):
