@@ -70,4 +70,7 @@ def executar_tarefa1(input_file=None, log_file=None, a_fixed=A, b_fixed=B):
 
 if __name__ == "__main__":
     args = sys.argv[1:]
-    executar_tarefa1(*args[:2])
+    executar_tarefa1(
+        input_file=args[0] if args else None,
+        log_file=args[1] if len(args) > 1 else None,
+    )
