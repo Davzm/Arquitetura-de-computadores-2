@@ -146,7 +146,14 @@ def run_program(instr_file=None, reg_file=None, data_file=None, log_file=None,
 
 if __name__ == "__main__":
     try:
-        run_program(*sys.argv[1:5])
+        argv = sys.argv[1:5]
+        run_program(
+            instr_file=argv[0] if len(argv) > 0 else None,
+            reg_file=argv[1] if len(argv) > 1 else None,
+            data_file=argv[2] if len(argv) > 2 else None,
+            log_file=argv[3] if len(argv) > 3 else None,
+            echo=True,
+        )
     except (ValueError, FileNotFoundError) as exc:
         print(f"Erro: {exc}", file=sys.stderr)
         sys.exit(1)
