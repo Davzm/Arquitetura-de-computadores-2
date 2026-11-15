@@ -25,7 +25,7 @@ _ETAPA2 = os.path.normpath(
 if _ETAPA2 not in sys.path:
     sys.path.append(_ETAPA2)
 
-from datapath import (  # noqa: E402
+from datapath import (  # noqa: E402  # type: ignore[import-not-found]
     MASK8, MASK32, InvalidControlSignals, Mic1DataPath,
 )
 

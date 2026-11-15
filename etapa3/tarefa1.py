@@ -63,4 +63,10 @@ def executar_tarefa1(micro_file=None, reg_file=None, data_file=None, log_file=No
 
 
 if __name__ == "__main__":
-    executar_tarefa1(*sys.argv[1:5])
+    args = sys.argv[1:5]
+    executar_tarefa1(
+        micro_file=args[0] if len(args) > 0 else None,
+        reg_file=args[1] if len(args) > 1 else None,
+        data_file=args[2] if len(args) > 2 else None,
+        log_file=args[3] if len(args) > 3 else None,
+    )
