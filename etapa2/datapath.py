@@ -103,7 +103,7 @@ class Mic1DataPath:
         """
         if not os.path.exists(filepath):
             raise FileNotFoundError(f"Arquivo de registradores '{filepath}' não encontrado.")
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, "r", encoding="utf-8-sig") as f:
             for num, line in enumerate(f, 1):
                 line = line.strip()
                 if not line:

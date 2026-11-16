@@ -51,7 +51,7 @@ class Mic1(Mic1DataPath):
         if not os.path.exists(data_path):
             raise FileNotFoundError(f"Arquivo de dados '{data_path}' não encontrado.")
         memory = []
-        with open(data_path, "r", encoding="utf-8") as f:
+        with open(data_path, "r", encoding="utf-8-sig") as f:
             for num, line in enumerate(f, 1):
                 word = line.strip()
                 if not word:

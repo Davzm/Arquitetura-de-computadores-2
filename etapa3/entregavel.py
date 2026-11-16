@@ -92,7 +92,7 @@ def parse_program(path: str):
     if not os.path.exists(path):
         raise FileNotFoundError(f"Arquivo de instruções '{path}' não encontrado.")
     program, errors = [], []
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, "r", encoding="utf-8-sig") as f:
         for num, raw in enumerate(f, 1):
             line = raw.strip()
             if not line:
